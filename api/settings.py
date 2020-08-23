@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import urllib
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -76,8 +76,13 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'CLIENT': {
+            'host': 'mongodb+srv://service:fp7eYT3DByXB5bp@cluster0.fl8lu.mongodb.net/<dbname>?retryWrites=true&w=majority',
+            'username': 'service',
+            'password': 'fp7eYT3DByXB5bp',
+            'authMechanism': 'SCRAM-SHA-1'
+        }
     }
 }
 
