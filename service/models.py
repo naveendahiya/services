@@ -27,6 +27,7 @@ class Location(models.Model):
     address = models.CharField(max_length=500, validators=[MinLengthValidator(10)])
     latitude = models.FloatField()
     longitude = models.FloatField()
+    pincode = models.IntegerField(default=0)
 
     task = models.ForeignKey(Task, related_name='location', on_delete=models.CASCADE)
 

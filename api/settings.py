@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'service',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -78,6 +80,7 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': False,
         'CLIENT': {
             'host': 'mongodb+srv://service:fp7eYT3DByXB5bp@cluster0.fl8lu.mongodb.net/<dbname>?retryWrites=true&w=majority',
             'username': 'service',
