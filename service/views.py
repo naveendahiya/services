@@ -2,15 +2,20 @@ from django.shortcuts import render
 from service import models
 from rest_framework import viewsets
 from service import serializers
+from django_filters import rest_framework as filters
+from rest_framework.filters import SearchFilter, OrderingFilter
 # Create your views here.
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = models.Task.objects.all()
     serializer_class = serializers.TaskSerializers
 
+
 class BidViewSet(viewsets.ModelViewSet):
     queryset = models.Bid.objects.all()
     serializer_class = serializers.BidSerializers
+    filter_backends = (filters.DjangoFilterBackend, OrderingFilter,)
+    filterset_fields = ('task',)
 
 class LocationViewSet(viewsets.ModelViewSet):
     queryset = models.Location.objects.all()
