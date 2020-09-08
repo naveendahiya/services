@@ -40,3 +40,8 @@ class Bid(models.Model):
     creater = models.ForeignKey(User, related_name='mybids', on_delete=models.CASCADE)
 
 
+class Message(models.Model):
+    message = models.CharField(max_length=1024, null=False)
+    timestamp = datetime.datetime.now()
+
+    creater = models.ForeignKey(User, related_name='mymessage', on_delete=models.CASCADE)
