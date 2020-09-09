@@ -19,6 +19,7 @@ class Task(models.Model):
         ("C", "Close")
     ]
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='O')
+    selected = models.IntegerField(default=-1)
 
     creater = models.ForeignKey(User, related_name='mytasks', on_delete=models.CASCADE)
 
@@ -45,3 +46,4 @@ class Message(models.Model):
     timestamp = datetime.datetime.now()
 
     creater = models.ForeignKey(User, related_name='mymessage', on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, related_name='task_chat', on_delete=models.CASCADE)
