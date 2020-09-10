@@ -66,7 +66,7 @@ class ChatConsumer(WebsocketConsumer):
         task = Task.objects.get(pk=self.task_id)
         creater_user = User.objects.get(pk = data['user_id'])
 
-       if data['user_id'] in self.accept:
+        if data['user_id'] in self.accept:
             message = Message.objects.create(creater=creater_user,message=text,task=task)
             content = {
                'command': 'new_message',

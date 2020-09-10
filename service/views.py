@@ -1,3 +1,6 @@
+
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from dj_rest_auth.registration.views import SocialLoginView
 from django.shortcuts import render
 from service import models
 from rest_framework import viewsets
@@ -24,3 +27,6 @@ class LocationViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializers
+
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter

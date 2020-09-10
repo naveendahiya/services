@@ -14,6 +14,7 @@ router.register(r'bids', views.BidViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('dj-rest-auth/facebook/', views.FacebookLogin.as_view(), name='fb_login')
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
