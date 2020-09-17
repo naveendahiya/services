@@ -10,6 +10,7 @@ router.register(r'tasks', views.TaskViewSet)
 router.register(r'locations', views.LocationViewSet)
 router.register(r'users', views.UserViewSet)
 router.register(r'bids', views.BidViewSet)
+router.register(r'messages', views.MessageViewSet)
 
 
 urlpatterns = [

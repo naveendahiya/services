@@ -6,6 +6,11 @@ class TaskSerializers(serializers.ModelSerializer):
         model = models.Task
         fields = "__all__"
 
+class MessageSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Message
+        fields = "__all__"
+
 class LocationSerializers(serializers.ModelSerializer):
     class Meta:
         model = models.Location

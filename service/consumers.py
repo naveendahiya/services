@@ -1,10 +1,14 @@
 import asyncio
 import json
+import io
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 from service.models import User
 from service.models import Message
 from service.models import Task
+from service.serializers import MessageSerializers
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -42,7 +46,7 @@ class ChatConsumer(WebsocketConsumer):
 
 
     def init_chat(self, data):
-        user_id = data['user_id']
+        user_id = data['userid']
         user = User.objects.get(pk = user_id)
         content = {
                'command': 'init_chat',
@@ -55,7 +59,7 @@ class ChatConsumer(WebsocketConsumer):
             print('false')
             self.disconnect('Sorry, this user is not allowed to acces this chat')
 
-    def fetch_messages(self, data):
+    def fetch_messages(self, data2):
         task = None
         try:
             task = Task.objects.get(pk=self.task_id)
@@ -63,12 +67,15 @@ class ChatConsumer(WebsocketConsumer):
             self.disconnect('Task does not exist')
 
         messages = task.task_chat.all()
+        serialized_messages = MessageSerializers(messages, many=True).data
+        info = JSONRenderer().render(serialized_messages)
+        stream = io.BytesIO(info)
+        data = JSONParser().parse(stream)
         content = {
             'command': 'messages',
-            'messages': self.messages_to_json(messages)
+            'messages': data
         }
-
-        user = data['user_id']
+        user = data2['userid']
         if user in self.access:
             self.send_message(content)
         else:
@@ -79,15 +86,18 @@ class ChatConsumer(WebsocketConsumer):
     def new_message(self, data):
         text = data['text']
         task = Task.objects.get(pk=self.task_id)
-        creater_user = User.objects.get(pk = data['user_id'])
+        creater_user = User.objects.get(pk = data['userid'])
 
-        if data['user_id'] in self.access:
+        if data['userid'] in self.access:
             message = Message.objects.create(creater=creater_user,message=text,task=task)
+            self.save()
+            serialized_message = MessageSerializers(message).data
             content = {
                'command': 'new_message',
-                'message': self.message_to_json(message)
+                'message': serialized_message
             }
-            self.send_chat_message(content)
+            data2 = json.dumps(content)
+            self.send_chat_message(data2)
         else:
             self.disconnect('Sorry, this user is not allowed to acces this chat')
 
@@ -119,14 +129,17 @@ class ChatConsumer(WebsocketConsumer):
         data = json.loads(text_data)
         self.commands[data['command']](self, data)
 
-    def send_message(self, message):
-        self.send(text_data=json.dumps(message))
+    def send_message(self, content):
+        self.send(text_data=json.dumps(content))
 
     def send_chat_message(self, message):
-        async_to_sync(self.channel_layer.group_send)(self.room_group_name, {
-            'type': 'chat_message',
-            'message': message
-        })
+        async_to_sync(self.channel_layer.group_send)(
+           self.room_group_name,
+           {
+             'type': 'chat_message',
+             'message': message
+           }
+        )
 
     def chat_message(self, event):
         message = event['message']

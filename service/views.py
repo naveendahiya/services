@@ -13,6 +13,10 @@ class TaskViewSet(viewsets.ModelViewSet):
     queryset = models.Task.objects.all()
     serializer_class = serializers.TaskSerializers
 
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = models.Message.objects.all()
+    serializer_class = serializers.MessageSerializers
+
 
 class BidViewSet(viewsets.ModelViewSet):
     queryset = models.Bid.objects.all()
