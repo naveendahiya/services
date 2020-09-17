@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class User(AbstractUser):
-    mobile = models.IntegerField()
+    mobile = models.IntegerField(null=True)
 
 
 class Task(models.Model):
