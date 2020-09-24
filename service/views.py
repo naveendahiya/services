@@ -7,11 +7,19 @@ from rest_framework import viewsets
 from service import serializers
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 50
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 # Create your views here.
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = models.Task.objects.all()
     serializer_class = serializers.TaskSerializers
+    pagination_class = StandardResultsSetPagination
+
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = models.Message.objects.all()

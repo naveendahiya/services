@@ -6,6 +6,7 @@ from asgiref.sync import async_to_sync
 from service.models import User
 from service.models import Message
 from service.models import Task
+from service.models import Bid
 from service.serializers import MessageSerializers
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
@@ -20,12 +21,13 @@ class ChatConsumer(WebsocketConsumer):
         #checking whether the user is allowed to chat in this room or not
         task = Task.objects.get(pk=self.task_id)
         worker = task.selected
+        bidcreater = Bid.objects.get(pk = worker)
         taskcreater = task.creater
         if worker == -1:
             self.access[0] = taskcreater.pk 
         else:
             self.access[0] = taskcreater.pk
-            self.access[1] = worker.creater.pk
+            self.access[1] = bidcreater
         print(self.access)
         #current user info
         self.user_id = self.scope['url_route']['kwargs']['user_id']
