@@ -6,6 +6,7 @@ from asgiref.sync import async_to_sync
 from service.models import User
 from service.models import Message
 from service.models import Task
+from service.models import Bid
 from service.serializers import MessageSerializers
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
@@ -20,12 +21,13 @@ class ChatConsumer(WebsocketConsumer):
         #checking whether the user is allowed to chat in this room or not
         task = Task.objects.get(pk=self.task_id)
         worker = task.selected
+        bidcreater = Bid.objects.get(pk = worker)
         taskcreater = task.creater
-        if worker is None:
+        if worker == -1:
             self.access[0] = taskcreater.pk 
         else:
             self.access[0] = taskcreater.pk
-            self.access[1] = worker.creater.pk
+            self.access[1] = bidcreater
         print(self.access)
         #current user info
         self.user_id = self.scope['url_route']['kwargs']['user_id']
@@ -90,14 +92,11 @@ class ChatConsumer(WebsocketConsumer):
 
         if data['userid'] in self.access:
             message = Message.objects.create(creater=creater_user,message=text,task=task)
-            self.save()
-            serialized_message = MessageSerializers(message).data
             content = {
-               'command': 'new_message',
-                'message': serialized_message
+                'command': 'new_message',
+                'message': self.message_to_json(message)
             }
-            data2 = json.dumps(content)
-            self.send_chat_message(data2)
+            self.send_chat_message(content)
         else:
             self.disconnect('Sorry, this user is not allowed to acces this chat')
 
@@ -112,9 +111,9 @@ class ChatConsumer(WebsocketConsumer):
     def message_to_json(self, message):
         return {
             'id': str(message.id),
-            'creater': message.creater.username,
-            'content': message.message,
-            'created_at': str(message.timestamp)
+            'creater': message.creater.id,
+            'message': message.message,
+            'task': message.task.id,
         }
 
     commands = {

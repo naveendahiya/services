@@ -11,6 +11,8 @@ router.register(r'locations', views.LocationViewSet)
 router.register(r'users', views.UserViewSet)
 router.register(r'bids', views.BidViewSet)
 router.register(r'messages', views.MessageViewSet)
+router.register(r'questions', views.QuestionViewSet)
+router.register(r'answers', views.AnswerViewSet)
 
 
 urlpatterns = [

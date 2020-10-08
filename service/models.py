@@ -5,8 +5,9 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
+
 class User(AbstractUser):
-    mobile = models.IntegerField()
+    mobile = models.IntegerField(null=True)
 
 
 class Task(models.Model):
@@ -47,3 +48,22 @@ class Message(models.Model):
 
     creater = models.ForeignKey(User, related_name='mymessage', on_delete=models.CASCADE)
     task = models.ForeignKey(Task, related_name='task_chat', on_delete=models.CASCADE)
+
+
+class Question(models.Model):
+    question = models.CharField(max_length=500, null=False)
+    timestamp = datetime.datetime.now()
+
+    creater = models.ForeignKey(User, related_name='myquestions', on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, related_name='task_questions', on_delete=models.CASCADE)
+
+
+class Answer(models.Model):
+    answer = models.CharField(max_length=500, null=False)
+    timestamp = datetime.datetime.now()
+
+    creater = models.ForeignKey(User, related_name='myanswers', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='questionanswer', on_delete=models.CASCADE)
+
+
+

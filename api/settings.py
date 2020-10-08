@@ -102,14 +102,12 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': 'mongodb+srv://service:fp7eYT3DByXB5bp@cluster0.fl8lu.mongodb.net/<dbname>?retryWrites=true&w=majority',
-            'username': 'service',
-            'password': 'fp7eYT3DByXB5bp',
-            'authMechanism': 'SCRAM-SHA-1'
-        }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'services',
+        'USER': 'gautam',
+        'PASSWORD': '0110110',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '8000',
     }
 }
 
@@ -163,3 +161,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 SITE_ID = 1
+
+#mongodb+srv://service:fp7eYT3DByXB5bp@cluster0.fl8lu.mongodb.net/<dbname>?retryWrites=true&w=majority
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+
+ACCOUNT_EMAIL_REQUIRED = False
